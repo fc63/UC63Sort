@@ -51,3 +51,5 @@ The space complexity is **O(n)**:
 - Since the isUnique array only allocates up to the size of the input array, the space complexity remains **O(n)**.
 
 This balance of time and space complexity makes the code suitable for processing large arrays with numerous duplicate entries, maintaining efficient memory usage and execution speed.
+
+**Note:** A value of 63 for RUN is not the most efficient. I think default value should be 32. 63 is only my signature. It will probably work better with powers of 2, such as 16, 32, 64. For today, the most efficient value is probably 32. For smaller data, you can change 63 to 16, or 64 for larger numbers. Insertion Sort can become significantly less efficient after a size of 64.
