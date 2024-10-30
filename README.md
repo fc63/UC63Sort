@@ -1,5 +1,5 @@
 
-# 63UCSort
+# UC63Sort
 
 63UCSort is a unique counting sort implementation that efficiently sorts arrays by first identifying unique elements and counting their occurrences, then sorting these unique values. This approach aims to reduce redundant data operations, achieving optimal performance with arrays containing repeated values. The algorithm name combines "63" as the insertion sort run size and "UC" for "Unique Counting."
 
