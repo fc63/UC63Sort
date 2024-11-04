@@ -53,3 +53,17 @@ The space complexity is **O(n)**:
 This balance of time and space complexity makes the code suitable for processing large arrays with numerous duplicate entries, maintaining efficient memory usage and execution speed.
 
 ***Note:** A value of 63 for RUN is not the most efficient. I think default value should be 32. 63 is only my signature. It will probably work better with powers of 2, such as 16, 32, 64. For today, the most efficient value is probably 32. For smaller data, you can change 63 to 16, or 64 for larger numbers. Insertion Sort can become significantly less efficient after a size of 64.*
+
+## Detailed for RUN size
+
+The value of RUN (the size of the subarrays being sorted by insertion sort) can significantly affect the overall time complexity of the algorithm.
+
+When the RUN size is small (such as 32 to 64 elements), insertion sort works efficiently because it performs well on small arrays, even though it has a time complexity of O(n^2). This keeps the overall sorting process efficient, typically running in O(n log n) time because the main sorting process is handled by merge sort.
+
+However, as the RUN size gets larger (approaching the square root of the total array size, or n^(1/2)), insertion sort has to handle increasingly larger subarrays. Since insertion sort has a O(n^2) time complexity, it becomes slower for these larger subarrays. When RUN is too large, the quadratic time complexity of insertion sort starts to dominate, causing the overall algorithm to behave more like O(n^2) instead of O(n log n).
+Example:
+
+    If your array has 10,000 elements, and the RUN size is around 100 (which is roughly the square root of 10,000), the insertion sort's O(n^2) nature becomes noticeable and starts to slow down the sorting process.
+    On the other hand, if the RUN size is small (like 32 or 64), insertion sort remains efficient, and the algorithm maintains its faster O(n log n) behavior.
+
+In short, if the RUN size is close to the square root of the total number of elements in the array, the performance of the algorithm can degrade towards O(n^2). Keeping RUN small ensures that the faster O(n log n) performance of merge sort is maintained.
