@@ -75,4 +75,4 @@ if all values ​​are unique and the RUN size is approaching the square root o
 
 However, this is quite difficult to achieve.
 
-For example, for a RUN size of 64; the square of 64 is 1,048,576. So, if your array size is less than 1,048,576, the algorithm maintains O(n log n) performance even with RUN = 64. However, when the array size is 1,048,576 or larger, the O(n^2) effect of insertionSort becomes more significant for this size.
+For example, for a RUN size of 64; the square of 64 is 1,048,576. So, if your array size is less than 1,048,576, the instertion sort algorithm maintains O(u log u) performance even with RUN = 64. However, when the array size is 1,048,576 or larger and all elements are unique (so n = u), the O(n^2) effect of insertionSort becomes more significant for this size.
