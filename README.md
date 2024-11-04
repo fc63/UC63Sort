@@ -61,9 +61,10 @@ The value of RUN (the size of the subarrays being sorted by insertion sort) can 
 When the RUN size is small (such as 32 to 64 elements), insertion sort works efficiently because it performs well on small arrays, even though it has a time complexity of O(n^2). This keeps the overall sorting process efficient, typically running in O(n log n) time because the main sorting process is handled by merge sort.
 
 However, as the RUN size gets larger (approaching the square root of the total array size, or n^(1/2)), insertion sort has to handle increasingly larger subarrays. Since insertion sort has a O(n^2) time complexity, it becomes slower for these larger subarrays. When RUN is too large, the quadratic time complexity of insertion sort starts to dominate, causing the overall algorithm to behave more like O(n^2) instead of O(n log n).
+
 Example:
 
-    If your array has 10,000 elements, and the RUN size is around 100 (which is roughly the square root of 10,000), the insertion sort's O(n^2) nature becomes noticeable and starts to slow down the sorting process.
-    On the other hand, if the RUN size is small (like 32 or 64), insertion sort remains efficient, and the algorithm maintains its faster O(n log n) behavior.
+- If your array has 10,000 elements, and the RUN size is around 100 (which is roughly the square root of 10,000), the insertion sort's O(n^2) nature becomes noticeable and starts to slow down the sorting process.
+- On the other hand, if the RUN size is small (like 32 or 64), insertion sort remains efficient, and the algorithm maintains its faster O(n log n) behavior.
 
 In short, if the RUN size is close to the square root of the total number of elements in the array, the performance of the algorithm can degrade towards O(n^2). Keeping RUN small ensures that the faster O(n log n) performance of merge sort is maintained.
