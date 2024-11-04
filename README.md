@@ -60,7 +60,7 @@ The value of RUN (the size of the subarrays being sorted by insertion sort) can 
 
 When the RUN size is small (such as 32 to 64 elements), insertion sort works efficiently because it performs well on small arrays, even though it has a time complexity of O(n^2). This keeps the overall sorting process efficient, typically running in O(n log n) time because the main sorting process is handled by merge sort.
 
-However, as the RUN size gets larger (approaching the square root of the total array size, or n^(1/2)), insertion sort has to handle increasingly larger subarrays. Since insertion sort has a O(n^2) time complexity, it becomes slower for these larger subarrays. When RUN is too large, the quadratic time complexity of insertion sort starts to dominate, causing the overall algorithm to behave more like O(n^2) instead of O(n log n).
+However, as the RUN size gets larger (approaching the square root of the total array size, or n^(1/2)), insertion sort has to handle increasingly larger subarrays. Since insertion sort has a O(n^2) time complexity, it becomes slower for these larger subarrays. When RUN is too large, the quadratic time complexity of insertion sort starts to dominate, causing the overall algorithm to behave more like O(n + u^2) instead of O(n + u log u).
 
 Example:
 
@@ -68,3 +68,11 @@ Example:
 - On the other hand, if the RUN size is small (like 32 or 64), insertion sort remains efficient, and the algorithm maintains its faster O(n log n) behavior.
 
 In short, if the RUN size is close to the square root of the total number of elements in the array, the performance of the algorithm can degrade towards O(n^2). Keeping RUN small ensures that the faster O(n log n) performance of merge sort is maintained.
+
+## Worst Case Scenerio
+
+if all values ​​are unique and the RUN size is approaching the square root of the total array size ( n^(1/2) ), this is our worst case scenario and will cause UC63Sort to run in O(n^2). Because n = u and unique values ​​have O(u^2) time complexity due to the RUN size. So, this results in O(n^2) performance.
+
+However, this is quite difficult to achieve.
+
+For example, for a RUN size of 64; the square of 64 is 1,048,576. So, if your array size is less than 1,048,576, the algorithm maintains O(n log n) performance even with RUN = 64. However, when the array size is 1,048,576 or larger, the O(n^2) effect of insertionSort becomes more significant for this size.
