@@ -17,7 +17,7 @@ UC63Sort is a unique counting sort implementation that efficiently sorts arrays 
 - **Array Reconstruction:** Reconstructs the original array based on sorted unique elements and their frequencies.
 ## Examples
 
-```javascript
+```
 int arr[] = {63, 3, 12, 1, 5, 5, 3, 9};
 int size = sizeof(arr) / sizeof(arr[0]);
 
@@ -34,7 +34,7 @@ printArray(arr, size);
 The time complexity of the UC63Sort is **O(n + u⋅log⁡(u))**, where:
 
 - ***n*** represents the total number of elements in the input array.
-- ***u*** u represents the number of **unique** elements in the array.
+- ***u*** represents the number of **unique** elements in the array.
 
 
 1. **Finding Unique Elements and Counting Occurrences:** The algorithm iterates through the input array once to identify unique values and count each element's occurrences, contributing an **O(n)** complexity.
