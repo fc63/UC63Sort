@@ -1,38 +1,49 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-#define RUN 63
+#include <stdbool.h>
 
 typedef struct {
-    int* uniqueArr;
-    int* countArr;
+    int value;
+    int count;
+} HashNode;
+
+typedef struct {
+    HashNode* table;
+    int size;
     int uniqueSize;
-    int max;
-} UniqueData;
+} HashTable;
 
-UniqueData findUniqueAndCounts(int* arr, int size) {
-    UniqueData data;
-    data.max = arr[0];
+HashTable* createHashTable(int size) {
+    HashTable* hashTable = (HashTable*)malloc(sizeof(HashTable));
+    hashTable->table = (HashNode*)calloc(size, sizeof(HashNode));
+    hashTable->size = size;
+    hashTable->uniqueSize = 0;
+    return hashTable;
+}
 
-    for (int i = 1; i < size; i++) {
-        if (arr[i] > data.max) data.max = arr[i];
+void insert(HashTable* hashTable, int value) {
+    int index = abs(value) % hashTable->size;
+    while (hashTable->table[index].count != 0 && hashTable->table[index].value != value) {
+        index = (index + 1) % hashTable->size;
     }
+    if (hashTable->table[index].count == 0) {
+        hashTable->table[index].value = value;
+        hashTable->uniqueSize++;
+    }
+    hashTable->table[index].count++;
+}
 
-    data.uniqueArr = (int*)malloc(size * sizeof(int));
-    data.countArr = (int*)calloc(data.max + 1, sizeof(int));
-    data.uniqueSize = 0;
-
-    bool* isUnique = (bool*)calloc(data.max + 1, sizeof(bool));
-
-    for (int i = 0; i < size; i++) {
-        if (!isUnique[arr[i]]) {
-            isUnique[arr[i]] = true;
-            data.uniqueArr[data.uniqueSize++] = arr[i];
+void extractUniqueAndCounts(HashTable* hashTable, int** uniqueArr, int** countArr) {
+    *uniqueArr = (int*)malloc(hashTable->uniqueSize * sizeof(int));
+    *countArr = (int*)malloc(hashTable->uniqueSize * sizeof(int));
+    int pos = 0;
+    for (int i = 0; i < hashTable->size; i++) {
+        if (hashTable->table[i].count > 0) {
+            (*uniqueArr)[pos] = hashTable->table[i].value;
+            (*countArr)[pos] = hashTable->table[i].count;
+            pos++;
         }
-        data.countArr[arr[i]]++;
     }
-    free(isUnique);
-    return data;
 }
 
 void insertionSort(int* arr, int left, int right) {
@@ -72,12 +83,11 @@ void merge(int* arr, int left, int mid, int right) {
 }
 
 void sortUniqueArray(int* arr, int n) {
-
-    for (int i = 0; i < n; i += RUN) {
-        insertionSort(arr, i, (i + RUN - 1 < n - 1) ? i + RUN - 1 : n - 1);
+    for (int i = 0; i < n; i += 63) {
+        insertionSort(arr, i, (i + 63 - 1 < n - 1) ? i + 63 - 1 : n - 1);
     }
 
-    for (int size = RUN; size < n; size = 2 * size) {
+    for (int size = 63; size < n; size = 2 * size) {
         for (int left = 0; left < n; left += 2 * size) {
             int mid = left + size - 1;
             int right = (left + 2 * size - 1 < n - 1) ? left + 2 * size - 1 : n - 1;
@@ -87,12 +97,12 @@ void sortUniqueArray(int* arr, int n) {
     }
 }
 
-void reconstructArray(int* arr, UniqueData data) {
+void reconstructArray(int* arr, int* uniqueArr, int* countArr, int uniqueSize) {
     int pos = 0;
 
-    for (int i = 0; i < data.uniqueSize; i++) {
-        int value = data.uniqueArr[i];
-        int count = data.countArr[value];
+    for (int i = 0; i < uniqueSize; i++) {
+        int value = uniqueArr[i];
+        int count = countArr[i];
 
         for (int j = 0; j < count; j++) {
             arr[pos++] = value;
@@ -107,26 +117,40 @@ void printArray(int* arr, int size) {
     printf("\n");
 }
 
+void freeHashTable(HashTable* hashTable) {
+    free(hashTable->table);
+    free(hashTable);
+}
+
 int main() {
     int arr[] = {63, 3, 12, 1, 5, 5, 3, 9};
     int size = sizeof(arr) / sizeof(arr[0]);
 
-    UniqueData data = findUniqueAndCounts(arr, size);
+    HashTable* hashTable = createHashTable(size * 2);
+
+    for (int i = 0; i < size; i++) {
+        insert(hashTable, arr[i]);
+    }
+
+    int* uniqueArr;
+    int* countArr;
+    extractUniqueAndCounts(hashTable, &uniqueArr, &countArr);
 
     printf("Unique Array (unsorted): ");
-    printArray(data.uniqueArr, data.uniqueSize);
+    printArray(uniqueArr, hashTable->uniqueSize);
 
-    sortUniqueArray(data.uniqueArr, data.uniqueSize);
+    sortUniqueArray(uniqueArr, hashTable->uniqueSize);
 
     printf("Unique Array (sorted): ");
-    printArray(data.uniqueArr, data.uniqueSize);
+    printArray(uniqueArr, hashTable->uniqueSize);
 
-    reconstructArray(arr, data);
+    reconstructArray(arr, uniqueArr, countArr, hashTable->uniqueSize);
 
     printf("Sorted Array: ");
     printArray(arr, size);
 
-    free(data.uniqueArr);
-    free(data.countArr);
+    free(uniqueArr);
+    free(countArr);
+    freeHashTable(hashTable);
     return 0;
 }
