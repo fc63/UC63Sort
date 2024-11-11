@@ -5,11 +5,56 @@
 #define RUN 63
 
 typedef struct {
-    int* uniqueArr;
-    int* countArr;
+    int value;
+    int count;
+} HashNode;
+
+typedef struct {
+    HashNode* table;
+    int size;
     int uniqueSize;
-    int max;
-} UniqueData;
+} HashTable;
+
+HashTable* createHashTable(int size) {
+    HashTable* hashTable = (HashTable*)malloc(sizeof(HashTable));
+    hashTable->table = (HashNode*)calloc(size, sizeof(HashNode));
+    hashTable->size = size;
+    hashTable->uniqueSize = 0;
+    return hashTable;
+}
+
+void freeHashTable(HashTable* hashTable) {
+    if (hashTable) {
+        free(hashTable->table);
+        free(hashTable);
+    }
+}
+
+
+void insert(HashTable* hashTable, int value) {
+    int index = abs(value) % hashTable->size;
+    while (hashTable->table[index].count != 0 && hashTable->table[index].value != value) {
+        index = (index + 1) % hashTable->size;
+    }
+    if (hashTable->table[index].count == 0) {
+        hashTable->table[index].value = value;
+        hashTable->uniqueSize++;
+    }
+    hashTable->table[index].count++;
+}
+
+void extractUniqueAndCounts(HashTable* hashTable, int** uniqueArr, int** countArr) {
+    *uniqueArr = (int*)malloc(hashTable->uniqueSize * sizeof(int));
+    *countArr = (int*)malloc(hashTable->uniqueSize * sizeof(int));
+    int pos = 0;
+    for (int i = 0; i < hashTable->size; i++) {
+        if (hashTable->table[i].count > 0) {
+            (*uniqueArr)[pos] = hashTable->table[i].value;
+            (*countArr)[pos] = hashTable->table[i].count;
+            pos++;
+        }
+    }
+}
 
 void insertionSort(int* arr, int left, int right) {
     for (int i = left + 1; i <= right; i++) {
@@ -62,40 +107,35 @@ void sortUniqueArray(int* arr, int n) {
     }
 }
 
-void UC63Sort(int* arr, int size) {
-    UniqueData data;
-    data.max = arr[0];
-    for (int i = 1; i < size; i++) {
-        if (arr[i] > data.max) data.max = arr[i];
-    }
-
-    data.uniqueArr = (int*)malloc(size * sizeof(int));
-    data.countArr = (int*)calloc(data.max + 1, sizeof(int));
-    data.uniqueSize = 0;
-
-    bool* isUnique = (bool*)calloc(data.max + 1, sizeof(bool));
-    for (int i = 0; i < size; i++) {
-        if (!isUnique[arr[i]]) {
-            isUnique[arr[i]] = true;
-            data.uniqueArr[data.uniqueSize++] = arr[i];
-        }
-        data.countArr[arr[i]]++;
-    }
-    free(isUnique);
-
-    sortUniqueArray(data.uniqueArr, data.uniqueSize);
-
+void reconstructArray(int* arr, int* uniqueArr, int* countArr, int uniqueSize) {
     int pos = 0;
-    for (int i = 0; i < data.uniqueSize; i++) {
-        int value = data.uniqueArr[i];
-        int count = data.countArr[value];
+    for (int i = 0; i < uniqueSize; i++) {
+        int value = uniqueArr[i];
+        int count = countArr[i];
         for (int j = 0; j < count; j++) {
             arr[pos++] = value;
         }
     }
+}
 
-    free(data.uniqueArr);
-    free(data.countArr);
+void UC63Sort(int* arr, int size) {
+    HashTable* hashTable = createHashTable(size * 2);
+
+    for (int i = 0; i < size; i++) {
+        insert(hashTable, arr[i]);
+    }
+
+    int* uniqueArr;
+    int* countArr;
+    extractUniqueAndCounts(hashTable, &uniqueArr, &countArr);
+
+    sortUniqueArray(uniqueArr, hashTable->uniqueSize);
+
+    reconstructArray(arr, uniqueArr, countArr, hashTable->uniqueSize);
+
+    free(uniqueArr);
+    free(countArr);
+    freeHashTable(hashTable);
 }
 
 void printArray(int* arr, int size) {
