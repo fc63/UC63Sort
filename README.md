@@ -1,3 +1,16 @@
+# Note
+
+Learning algorithms was a nice attempt, but as far as I learned from the algorithms course, using an array for the sort algorithm makes it faster due to the use of the processor's cache memory.
+The sort algorithm I wrote, on the other hand, was using a hashing method. Since the hashing is done in random areas of memory, it increases the access time to the data. Therefore, this algorithm is an useless one.
+Still, I'll archive what I wrote at the time and leave it here:
+
+# Not
+
+Algoritmaları öğrenmek için güzel bir denemeydi ancak algoritma dersinden öğrendiğim kadarıyla, sort algoritmasının array kullanılarak yapılması işlemcinin cache belleğinin kullanılması dolayısıyla daha hızlı oluyor.
+Bu yazdığım sort algoritması ise hashleme yöntemini kullanıyordu. Yapılan hashleme belleğin random bölgelerinde yapıldığı için veriye erişim süresini uzatıyor. Bu yüzden bu algoritma kullanışsız bir algoritmadır.
+Yine de zamanında yazdıklarımı arşivleyerek burada bırakacağım:
+
+
 
 # UC63Sort
 
